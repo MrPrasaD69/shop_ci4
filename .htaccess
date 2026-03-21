@@ -1,0 +1,8 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /shop_ci4/
+
+    # Redirect everything to public
+    RewriteCond %{REQUEST_URI} !^/shop_ci4/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
