@@ -176,7 +176,7 @@
                                     <p class="product-description"><?= (!empty($prod['product_description']) ? $prod['product_description'] : '') ?></p>
                                     <p class="product-qty"> Qty: <strong><?= (!empty($prod['product_quantity']) ? $prod['product_quantity'] : '') ?></strong></p>
                                     <p class="product-price">₹ <?= (!empty($prod['product_price']) ? $prod['product_price'] : '') ?></p>                                    
-                                    <button class="add-to-cart">+ Cart</button>
+                                    <button class="add-to-cart addToCartBtn" data-val="<?= (!empty($prod['id']) ? $prod['id'] : '') ?>">+ Cart</button>
                                 </div>
                             </div>
                             <?php
@@ -193,44 +193,58 @@
 </div>
 <script>
     $(document).ready(function() {
-        var loginBtn = $("#loginBtn");
 
-        $('#loginForm').on('submit', function(e) {
+        $(document).on('click',".addToCartBtn",function(e){
             e.preventDefault();
-
-            let formData = $(this).serialize();
+            var addToCartBtn = $(this);
+            var product_id = $(this).data('val');
 
             $.ajax({
-                url: $(this).attr('action'),
+                url: "<?= base_url('/addToCart') ?>",
                 type: "POST",
-                data: formData,
-                beforeSend: function() {
-                    loginBtn.prop('disabled', true).html('Logging in...');
+                data: {
+                    product_id:product_id
                 },
-                success: function(response) {
-                    loginBtn.prop('disabled', false).html('Login');
+                beforeSend: function(){
+                    addToCartBtn.prop('disabled', true).html('Adding...');
+                },
+                success: function(response){
+                    addToCartBtn.prop('disabled', false).html('+ Cart');
 
-                    if (response.status) {
-                        window.location.href = response.redirect;
-                    } else {
-                        $('#loginError').text(response.message);
+                    if(response.status){
+                        Swal.fire({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer:1000
+                        }).then(()=>{
+                            window.location.reload();
+                        });
+                    }
+                    else{
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: response.message
+                        });
                     }
 
                 },
-                error: function(xhr) {
-                    loginBtn.prop('disabled', false).html('Login');
+                error: function(xhr){
+                    addToCartBtn.prop('disabled', false).html('+ Cart');
 
-                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    if(xhr.responseJSON && xhr.responseJSON.errors){
                         let errors = xhr.responseJSON.errors;
                         let firstError = Object.values(errors)[0][0];
-                        $('#loginError').text(firstError);
-                    } else {
-                        $('#loginError').text("Something went wrong.");
+                        $('#errorDiv').text(firstError);
+                    }
+                    else{
+                        $('#errorDiv').text("Something went wrong.");
                     }
 
                 }
             });
-
         });
     });
 </script>

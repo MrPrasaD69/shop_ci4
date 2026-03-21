@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\OrderDetailModel;
+use App\Models\OrderModel;
 use App\Models\Products;
 use App\Models\ProductsModel;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -17,5 +19,100 @@ class HomeController extends BaseController
         ->findAll();
 
         return view('dashboard',$data);
+    }
+
+    public function addToCart(){
+        $user_id = $this->session->get('user_id');
+        $product_id = $this->request->getPost('product_id');
+        $product_model = new ProductsModel();
+        $order_model = new OrderModel();
+        $order_detail_model = new OrderDetailModel();
+
+        //Check Product Existence + Quantity
+        $product_data = $product_model
+        ->where('id',$product_id)
+        ->where('status','1')
+        ->first();
+        if(empty($product_data)){
+            return response()->setJSON([
+                'status'    =>false,
+                'message'   =>'Product not Found!'
+            ]);
+        }
+
+        if($product_data['product_quantity'] < 1){
+            return response()->setJSON([
+                'status'    =>false,
+                'message'   =>'Product out of Stock!'
+            ]);
+        }
+
+        //Check User's Cart Detail
+        $check_cart = $order_model
+        ->where('fk_user_id',$user_id)
+        ->where('order_status','P')
+        ->where('status','1')
+        ->first();
+
+        $timeStamp = date('Y-m-d H:i:s');
+        //When New Cart
+        if(empty($check_cart)){
+
+            //Store Order
+            $order_model->save([
+                'fk_user_id'    =>$user_id,
+                'created_at'    =>$timeStamp,
+                'updated_at'    =>$timeStamp
+            ]);
+
+            $order_id = $order_model->getInsertID();
+
+            //Store Order Detail
+            $order_detail_model->save([
+                'fk_order_id'   =>$order_id,
+                'fk_product_id' =>$product_id,
+                'price'         =>$product_data['product_price'],
+                'quantity'      =>1,
+                'created_at'    =>$timeStamp,
+                'updated_at'    =>$timeStamp                
+            ]);
+
+            //Update Product Quantity
+            $updated_quantity = $product_data['product_quantity'] - 1;
+            $product_model->update($product_data,[
+                'product_quantity'  =>$updated_quantity,
+            ]);
+
+            return response()->setJSON([
+                'status'    => true,
+                'message'   =>'Product Added Successfully!'
+            ]);
+        }
+        else{
+        //Existing Cart
+
+            $order_id = $check_cart['id'];
+
+            //Store Order Detail
+            $order_detail_model->save([
+                'fk_order_id'   =>$order_id,
+                'fk_product_id' =>$product_id,
+                'price'         =>$product_data['product_price'],
+                'quantity'      =>1,
+                'created_at'    =>$timeStamp,
+                'updated_at'    =>$timeStamp                
+            ]);
+
+            //Update Product Quantity
+            $updated_quantity = $product_data['product_quantity'] - 1;
+            $product_model->update($product_data,[
+                'product_quantity'  =>$updated_quantity,
+            ]);
+
+            return response()->setJSON([
+                'status'    => true,
+                'message'   =>'Product Added Successfully!'
+            ]);
+        }
     }
 }
