@@ -125,11 +125,26 @@
         color: #28a745;
     }
 
-    .cart-count {
+    .cart-count-empty {
         position: absolute;
         top: -8px;
         right: -10px;
         background: red;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 7px;
+        border-radius: 50%;
+        line-height: 1;
+        min-width: 18px;
+        text-align: center;
+    }
+
+    .cart-count-fill {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: green;
         color: #fff;
         font-size: 12px;
         font-weight: bold;
@@ -156,7 +171,7 @@
                             <div class="cart-wrapper">
                                 <a href="#" class="cart-icon">Your Items : 
                                     <i class="bi bi-cart3"></i>
-                                    <span class="cart-count"><?= (!empty($cart_detail) ? $cart_detail : '0') ?></span>
+                                    <span class="<?= (!empty($cart_detail) ? 'cart-count-fill' : 'cart-count-empty') ?>"><?= (!empty($cart_detail) ? $cart_detail : '0') ?></span>
                                 </a>
                             </div>
                         </div>
