@@ -156,7 +156,7 @@
                             <div class="cart-wrapper">
                                 <a href="#" class="cart-icon">Your Items : 
                                     <i class="bi bi-cart3"></i>
-                                    <span class="cart-count"><?= (!empty($card_detail['count']) ? $card_detail['count'] : '0') ?></span>
+                                    <span class="cart-count"><?= (!empty($cart_detail) ? $cart_detail : '0') ?></span>
                                 </a>
                             </div>
                         </div>

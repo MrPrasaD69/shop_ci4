@@ -5,18 +5,24 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\OrderDetailModel;
 use App\Models\OrderModel;
-use App\Models\Products;
 use App\Models\ProductsModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class HomeController extends BaseController
 {
     public function dashboard(){
         $products_model = new ProductsModel();
+        $order_model = new OrderModel();
+        $user_id = $this->session->get('user_id');
 
         $data['product_data'] = $products_model
         ->where('status','1')
         ->findAll();
+
+        $data['cart_detail'] = $order_model
+        ->join('tbl_order_detail','tbl_order.id=tbl_order_detail.fk_order_id AND tbl_order_detail.status="1"')
+        ->where('tbl_order.order_status','P')
+        ->where('tbl_order.status','1')
+        ->countAllResults();
 
         return view('dashboard',$data);
     }
