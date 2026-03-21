@@ -43,7 +43,8 @@
     }
     .product-image img {
         max-width: 100%;
-        height: auto;
+        width: auto;
+        height: 100px;
         display: block;
         margin: 0 auto;
         border-radius: 2%;
@@ -106,6 +107,39 @@
             flex: 0 0 100%;
         }
     }
+
+    /* Card Styling */
+    .cart-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .cart-icon {
+        position: relative;
+        font-size: 20px;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .cart-icon:hover {
+        color: #28a745;
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: red;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 3px 7px;
+        border-radius: 50%;
+        line-height: 1;
+        min-width: 18px;
+        text-align: center;
+    }
+    /* Card Styling */
 </style>
 <div class="container">
     <div class="row text-center mb-5">
@@ -116,6 +150,17 @@
 
             <div class="card shadow main-card">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-10"></div>
+                        <div class="col-lg-2 text-end">
+                            <div class="cart-wrapper">
+                                <a href="#" class="cart-icon">Your Items : 
+                                    <i class="bi bi-cart3"></i>
+                                    <span class="cart-count"><?= (!empty($card_detail['count']) ? $card_detail['count'] : '0') ?></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="product-grid">
                         <?php
