@@ -165,7 +165,7 @@
 
             <div class="card shadow main-card">
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col-lg-10"></div>
                         <div class="col-lg-2 text-end">
                             <div class="cart-wrapper">
@@ -188,7 +188,12 @@
                                 </div>
                                 <div class="product-details">
                                     <h2 class="product-title"><?= (!empty($prod['product_name']) ? $prod['product_name'] : '') ?></h2>
-                                    <p class="product-description"><?= (!empty($prod['product_description']) ? $prod['product_description'] : '') ?></p>
+                                    <p class="product-description" title="<?= $prod['product_description'] ?>">
+                                        <?php $word_count = 50; ?>
+                                        <?= mb_strlen($prod['product_description']) > $word_count 
+                                        ? mb_substr($prod['product_description'], 0, $word_count) . '...' 
+                                        : $prod['product_description']; ?>
+                                    </p>
                                     <p class="product-qty"> Qty: <strong><?= (!empty($prod['product_quantity']) ? $prod['product_quantity'] : '') ?></strong></p>
                                     <p class="product-price">₹ <?= (!empty($prod['product_price']) ? $prod['product_price'] : '') ?></p>                                    
                                     <button class="add-to-cart addToCartBtn" data-val="<?= (!empty($prod['id']) ? $prod['id'] : '') ?>">+ Cart</button>
