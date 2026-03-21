@@ -37,11 +37,16 @@
         border-radius: 6px;
     }
 
+    .product-image{
+        border:2px solid grey;
+        border-radius: 2%;
+    }
     .product-image img {
         max-width: 100%;
         height: auto;
         display: block;
         margin: 0 auto;
+        border-radius: 2%;
     }
 
     .product-title {
