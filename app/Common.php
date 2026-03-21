@@ -13,3 +13,5 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+define('APP_NAME','SHOPPING APP');
