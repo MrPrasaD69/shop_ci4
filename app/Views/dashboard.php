@@ -169,7 +169,7 @@
                         <div class="col-lg-10"></div>
                         <div class="col-lg-2 text-end">
                             <div class="cart-wrapper">
-                                <a href="#" class="cart-icon">Your Items : 
+                                <a href="<?= base_url('/myCart') ?>" class="cart-icon">Your Items : 
                                     <i class="bi bi-cart3"></i>
                                     <span class="<?= (!empty($cart_detail) ? 'cart-count-fill' : 'cart-count-empty') ?>"><?= (!empty($cart_detail) ? $cart_detail : '0') ?></span>
                                 </a>

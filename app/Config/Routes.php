@@ -17,4 +17,5 @@ $routes->group('',['filter'=>'auth'], function($routes){
     $routes->get('/logout','LoginController::logout');
 
     $routes->post('/addToCart','HomeController::addToCart');
+    $routes->get('/myCart','HomeController::myCart');
 });
