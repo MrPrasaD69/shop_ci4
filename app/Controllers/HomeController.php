@@ -131,8 +131,8 @@ class HomeController extends BaseController
         $data['cart_data'] = $order_model
         ->select('tbl_order.id as order_id, tbl_products.product_name,tbl_products.product_price, tbl_products.product_image,
         tbl_products.product_description, COUNT(tbl_order_detail.fk_product_id) as product_qty, SUM(tbl_products.product_price) as product_price_sum')
-        ->join('tbl_order_detail','tbl_order.id=tbl_order_detail.fk_order_id')
-        ->join('tbl_products','tbl_order_detail.fk_product_id=tbl_products.id')
+        ->join('tbl_order_detail','tbl_order.id=tbl_order_detail.fk_order_id AND tbl_order_detail.status="1"')
+        ->join('tbl_products','tbl_order_detail.fk_product_id=tbl_products.id AND tbl_products.status="1"')
         ->where('tbl_order.fk_user_id',$user_id)
         ->where('tbl_order.order_status','P')
         ->where('tbl_order.status','1')
