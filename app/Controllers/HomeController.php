@@ -20,6 +20,7 @@ class HomeController extends BaseController
 
         $data['cart_detail'] = $order_model
         ->join('tbl_order_detail','tbl_order.id=tbl_order_detail.fk_order_id AND tbl_order_detail.status="1"')
+        ->where('tbl_order.fk_user_id',$user_id)
         ->where('tbl_order.order_status','P')
         ->where('tbl_order.status','1')
         ->countAllResults();
