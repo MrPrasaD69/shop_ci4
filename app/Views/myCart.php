@@ -138,7 +138,7 @@
                                     </p>
                                     <p class="product-qty"> Qty: <strong><?= (!empty($prod['product_qty']) ? $prod['product_qty'] : '') ?> x [ <?= $prod['product_price'] ? $prod['product_price'] : '' ?> ]</strong></p>
                                     <p class="product-price">₹ <?= (!empty($prod['product_price_sum']) ? $prod['product_price_sum'] : '') ?></p>                                    
-                                    <button class="remove-cart removeCartBtn" data-val="<?= (!empty($prod['id']) ? $prod['id'] : '') ?>">-</button>
+                                    <button class="remove-cart removeCartBtn" data-val="<?= (!empty($prod['fk_product_id']) ? $prod['fk_product_id'] : '') ?>">-</button>
                                 </div>
                             </div>
                             <?php
@@ -154,8 +154,58 @@
     </div>
 </div>
 <script>
-    $(document).ready(function(){
-
+    $(document).on("click",".removeCartBtn",function(){
+        var product_id = $(this).data('val');
+        var removeBtn = $(this);
+        if(product_id){
+            Swal.fire({
+                title: "Do you want to remove?",
+                showCancelButton: true,
+                confirmButtonText: "Yes",
+            }).then((result) =>{
+                if(result.isConfirmed){
+                    $.ajax({
+                        url:'<?= base_url('/removeFromCart') ?>',
+                        type:'POST',
+                        data:{
+                            product_id:product_id
+                        },
+                        beforeSend:function(){
+                            removeBtn.prop('disabled',true);
+                        },
+                        success:function(resp){
+                            removeBtn.prop('disabled',false);
+                            if(resp.status){
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: resp.message,
+                                    timer:1000
+                                }).then(()=>{
+                                    window.location.reload();
+                                })
+                            }
+                            else{
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Oops...",
+                                    text: resp.message
+                                });
+                            }
+                        },
+                        error:function(err){
+                            removeBtn.prop('disabled',false);
+                            console.log(err);
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: "Something Went Wrong!"
+                            });
+                        }
+                    });
+                }
+            });
+        }
     });
 </script>
 <?= $this->endSection() ?>
